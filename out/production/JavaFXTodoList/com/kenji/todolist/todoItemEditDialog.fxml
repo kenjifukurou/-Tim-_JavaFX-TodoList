@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.kenji.todolist.EditController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <headerText>
+        Edit here and click save to update notes
+    </headerText>
+    <content>
+        <GridPane>
+            <Label text="shortDescription: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="shortDescriptionField" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+            <Label text="details: " GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <TextArea fx:id="detailsField" GridPane.columnIndex="1" GridPane.rowIndex="1" wrapText="true"/>
+
+            <Label text="Deadline: " GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <DatePicker fx:id="deadLineField" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+        </GridPane>
+    </content>
+</DialogPane>
