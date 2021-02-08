@@ -40,7 +40,7 @@ public class Main extends Application {
 
     @Override
     public void init() throws Exception {
-        System.out.println("loading mother fucker...");
+        System.out.println("loading mother fucker todolist...");
         try {
             TodoData.getInstance().loadTodoItems();
 

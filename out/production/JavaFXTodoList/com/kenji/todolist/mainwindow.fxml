@@ -1,23 +1,7 @@
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-
-<?import javafx.scene.control.DialogPane?>
-<?import javafx.scene.control.TextField?>
 <BorderPane fx:id="mainBorderPane" fx:controller="com.kenji.todolist.Controller" xmlns:fx="http://javafx.com/fxml">
 
     <top>
@@ -27,7 +11,8 @@
             </padding>
             <MenuBar minHeight="40">
                 <Menu text="File">
-                    <MenuItem text="New Note..." onAction="#showNewItemDialog"/>
+                    <MenuItem text="New..." onAction="#showNewItemDialog"/>
+                    <MenuItem text="Edit..." onAction="#showEditItemDialog"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Exit"/>
                 </Menu>
@@ -47,13 +32,14 @@
                 </padding>
                 <Button text="bold" fx:id="textBoldButton" onMouseClicked="#setTextBold" GridPane.columnIndex="0"/>
                 <Button text="Load file..." GridPane.columnIndex="1"/>
+                <Button text="Edit..." fx:id="editItemButton" onMouseClicked="#editTodoItem" GridPane.columnIndex="2"/>
             </GridPane>
         </VBox>
     </left>
 
     <center>
         <VBox>
-            <TextArea fx:id="itemDetailsDescription" VBox.vgrow="ALWAYS" style="-fx-background-color: gold"/>
+            <TextArea fx:id="itemDetailsDescription" VBox.vgrow="ALWAYS" style="-fx-background-color: gold" wrapText="true"/>
             <HBox>
                 <Label text="Due date: " style="-fx-background-color: cyan">
                     <font>
@@ -75,25 +61,25 @@
         </ListView>
     </right>
 
-    <bottom>
-        <DialogPane>
-            <headerText>
-                Instruction here, header text bla bla bla...
-            </headerText>
-            <content>
-                <GridPane vgap="10" hgap="10">
+<!--    <bottom>-->
+<!--        <DialogPane>-->
+<!--            <headerText>-->
+<!--                Instruction here, header text bla bla bla...-->
+<!--            </headerText>-->
+<!--            <content>-->
+<!--                <GridPane vgap="10" hgap="10">-->
 
-                    <Label text="Short Description: " GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+<!--                    <Label text="Short Description: " GridPane.rowIndex="0" GridPane.columnIndex="0"/>-->
+<!--                    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>-->
 
-                    <Label text="Details: " GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+<!--                    <Label text="Details: " GridPane.rowIndex="1" GridPane.columnIndex="0"/>-->
+<!--                    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>-->
 
-                    <Label text="Deadline: " GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+<!--                    <Label text="Deadline: " GridPane.rowIndex="2" GridPane.columnIndex="0"/>-->
+<!--                    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>-->
 
-                </GridPane>
-            </content>
-        </DialogPane>
-    </bottom>
+<!--                </GridPane>-->
+<!--            </content>-->
+<!--        </DialogPane>-->
+<!--    </bottom>-->
 </BorderPane>
