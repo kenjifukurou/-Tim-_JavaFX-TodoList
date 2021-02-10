@@ -2,14 +2,19 @@ package com.kenji.todolist;
 
 import com.kenji.todolist.datamodel.TodoData;
 import com.kenji.todolist.datamodel.TodoItem;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -20,8 +25,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class Controller {
 
@@ -38,6 +45,13 @@ public class Controller {
     private Button editItemButton;
     @FXML
     private ContextMenu listContextMenu;
+    @FXML
+    private ToggleButton toggleFilterButton;
+
+    private FilteredList<TodoItem> filteredList;
+
+    private Predicate<TodoItem> showAllItems;
+    private Predicate<TodoItem> showTodayItems;
 
     public void initialize() {
         System.out.println("initialized");
@@ -92,8 +106,41 @@ public class Controller {
             }
         });
 
+        showAllItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem item) {
+                return true;
+            }
+        };
+
+        showTodayItems = new Predicate<TodoItem>() {
+            @Override
+            public boolean test(TodoItem item) {
+                return (item.getDeadline().equals(LocalDate.now()));
+            }
+        };
+
+        //filtered List
+        filteredList = new FilteredList<TodoItem>(TodoData.getInstance().getTodoItems(),
+                new Predicate<TodoItem>() {
+                    @Override
+                    public boolean test(TodoItem item) {
+                        return true;
+                    }
+                });
+
+        //sorted list
+        SortedList<TodoItem> sortedList = new SortedList<TodoItem>(filteredList,
+                new Comparator<TodoItem>() {
+                    @Override
+                    public int compare(TodoItem o1, TodoItem o2) {
+                        return o1.getDeadline().compareTo(o2.getDeadline());
+                    }
+                });
+
 //        todoListView.getItems().setAll(TodoData.getInstance().getTodoItems());
-        todoListView.setItems(TodoData.getInstance().getTodoItems());
+//        todoListView.setItems(TodoData.getInstance().getTodoItems());
+        todoListView.setItems(sortedList);
 
         System.out.println(todoListView.getItems());
         todoListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -220,6 +267,18 @@ public class Controller {
     }
 
     @FXML
+    public void handleKeyPressed(KeyEvent keyEvent) {
+        TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            //found item,
+            if (keyEvent.getCode().equals(KeyCode.DELETE)) {
+                //if delete key is pressed
+                deleteItem(selectedItem);
+            }
+        }
+    }
+
+    @FXML
     public void handleClickEvent() {
         TodoItem item = todoListView.getSelectionModel().getSelectedItem();
         System.out.println("selected item is: " + item);
@@ -268,6 +327,60 @@ public class Controller {
             System.out.println("ok is pressed");
             TodoData.getInstance().deleteTodoItem(item);
         }
+    }
+
+    @FXML
+    public void sortByName() {
+        System.out.println("sort by name");
+        SortedList<TodoItem> sortedListName = new SortedList<TodoItem>(filteredList,
+                new Comparator<TodoItem>() {
+                    @Override
+                    public int compare(TodoItem o1, TodoItem o2) {
+                        return o1.getShortDescription().compareTo(o2.getShortDescription());
+                    }
+                });
+        todoListView.setItems(sortedListName);
+    }
+
+    @FXML
+    public void sortByDate() {
+        System.out.println("sort by date");
+        SortedList<TodoItem> sortedListDate = new SortedList<TodoItem>(filteredList,
+                new Comparator<TodoItem>() {
+                    @Override
+                    public int compare(TodoItem o1, TodoItem o2) {
+                        return o1.getDeadline().compareTo(o2.getDeadline());
+                    }
+                });
+        todoListView.setItems(sortedListDate);
+    }
+
+    @FXML
+    public void handleFilterButton() {
+        TodoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
+        if (toggleFilterButton.isSelected()) {
+            System.out.println("filter toggle is on");
+            filteredList.setPredicate(showTodayItems);
+            if (filteredList.isEmpty()) {
+                itemDetailsDescription.clear();
+                deadLineLabel.setText("");
+            } else if (filteredList.contains(selectedItem)) {
+                todoListView.getSelectionModel().select(selectedItem);
+            } else {
+                todoListView.getSelectionModel().selectFirst();
+            }
+
+        } else {
+            System.out.println("filter toggle is off");
+            filteredList.setPredicate(showAllItems);
+            todoListView.getSelectionModel().select(selectedItem);
+        }
+    }
+
+    @FXML
+    public void handleExit() {
+        System.out.println("bye bye...");
+        Platform.exit();
     }
 
 }

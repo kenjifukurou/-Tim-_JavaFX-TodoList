@@ -2,10 +2,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane fx:id="mainBorderPane" fx:controller="com.kenji.todolist.Controller" xmlns:fx="http://javafx.com/fxml">
 
     <top>
-        <HBox>
+        <VBox>
             <padding>
                 <Insets top="15"/>
             </padding>
@@ -14,15 +16,34 @@
                     <MenuItem text="New..." onAction="#showNewItemDialog"/>
                     <MenuItem text="Edit..." onAction="#showEditItemDialog"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Exit"/>
+                    <MenuItem text="Exit" onAction="#handleExit"/>
                 </Menu>
             </MenuBar>
-        </HBox>
+            <ToolBar>
+                <HBox>
+                    <Button text="New..." onAction="#showNewItemDialog">
+                        <tooltip>
+                            <Tooltip text="add new todo item."/>
+                        </tooltip>
+                        <graphic>
+                            <ImageView>
+                                <Image url="@/toolbarButtonGraphics/general/New24.gif"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <ToggleButton fx:id="toggleFilterButton" text="Today's Items" onAction="#handleFilterButton">
+                        <tooltip>
+                            <Tooltip text="show today items only"/>
+                        </tooltip>
+                    </ToggleButton>
+                </HBox>
+            </ToolBar>
+        </VBox>
     </top>
 
     <left>
         <VBox>
-            <ListView fx:id="todoListView" style="-fx-background-color: azure">
+            <ListView fx:id="todoListView" style="-fx-background-color: azure" onKeyPressed="#handleKeyPressed">
 
             </ListView>
 
@@ -34,6 +55,13 @@
                 <Button text="Load file..." GridPane.columnIndex="1"/>
                 <Button text="Edit..." fx:id="editItemButton" onMouseClicked="#editTodoItem" GridPane.columnIndex="2"/>
             </GridPane>
+            <HBox spacing="10">
+                <padding>
+                    <Insets top="5" bottom="5" left="5" right="5"/>
+                </padding>
+                <Button text="sort by title" fx:id="sortTitleButton" onMouseClicked="#sortByName"/>
+                <Button text="sort by date" fx:id="sortDateButton" onMouseClicked="#sortByDate"/>
+            </HBox>
         </VBox>
     </left>
 
